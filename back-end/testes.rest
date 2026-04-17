@@ -1,0 +1,15 @@
+# Criar novo usuário
+POST http://localhost:8000/api/v1/users/create
+Content-Type: application/json
+
+{
+  "firstName": "Joao",
+  "lastName": "Silva",
+  "username": "joaosilva",
+  "email": "joao@exemplo.com",
+  "password": "senhaSegura123"
+}
+
+###
+# Listar usuários
+GET http://localhost:8000/api/v1/users/list
