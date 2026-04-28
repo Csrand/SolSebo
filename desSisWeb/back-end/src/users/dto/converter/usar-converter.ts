@@ -7,10 +7,10 @@ export class UserConverte {
   static toUser(userRequest: UserRequest) {
     const user = new User();
 
-    if (userRequest.idUser != null) {
-      user.idUser = userRequest.idUser;
+    if (userRequest.id != null) {
+      user.id = userRequest.id;
     }
-    user.idUser = userRequest.idUser;
+    user.id = userRequest.id;
     user.firstName = userRequest.firstName;
     user.lastName = userRequest.lastName;
     user.username = userRequest.username;

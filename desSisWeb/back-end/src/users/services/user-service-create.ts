@@ -23,7 +23,7 @@ export class UserServiceCreate {
 
     if (hasUser) {
       throw new HttpException(
-        'Usuario com o email informado já está cadastrada',
+        'Usuario com o id informado já está cadastrada',
         HttpStatus.BAD_REQUEST,
       );
     }
