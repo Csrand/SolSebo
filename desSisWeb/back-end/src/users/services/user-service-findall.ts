@@ -15,7 +15,7 @@ export class UserServiceFindAll {
   async findAll(): Promise<UserResponse[]> {
     const usuarios = await this.disciplineRepository.find({
       order: {
-        idUser: 'ASC',
+        id: 'ASC',
       },
     });
     return UserConverte.toListUserResponse(usuarios);

@@ -17,7 +17,7 @@ export class UserServiceCreate {
 
     const hasUser = await this.disciplineRepository.findOne({
       where: {
-        idUser: user.idUser,
+        id: user.id,
       },
     });
 
