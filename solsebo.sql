@@ -9,6 +9,7 @@ CREATE TABLE usuarios (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     recovery_token CHAR(60) NULL COMMENT 'Bcrypt Hashed Token',
     token_expires DATETIME NULL COMMENT 'Data/Hora de expiração do token',
+    refresh_token CHAR(60) NULL COMMENT 'Bcrypt Hashed Refresh Token',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
