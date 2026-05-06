@@ -4,7 +4,7 @@ import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 export class UserRequest {
   @Type(() => Number)
   @IsOptional()
-  idUser?: number;
+  id: number;
 
   @IsNotEmpty({ message: 'O primeiro nome deve ser informado ' })
   @IsString({ message: 'O  primeiro nome deve ser do tipo string' })

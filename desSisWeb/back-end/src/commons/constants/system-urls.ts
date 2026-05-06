@@ -3,7 +3,7 @@ import { Users, Books } from './system-constants';
 export const SERVER = 'localhost@8000';
 export const CLIENT = 'localhost@3000';
 
-const API = 'api/v1';
+const API = 'solsebo';
 
 const CREATE = 'create';
 const LIST = 'list';

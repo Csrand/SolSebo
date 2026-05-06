@@ -1,14 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../../commons/entity/base-entity';
 
 @Entity('USUARIOS')
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn('increment', {
-    name: 'ID_USUARIO',
-    type: 'int',
-  })
-  idUser?: number;
-
   @Column({
     name: 'FIRST_NAME',
     type: 'varchar',

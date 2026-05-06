@@ -1,5 +1,5 @@
 # Criar novo usuário
-POST http://localhost:8000/api/v1/users/create
+POST http://localhost:8000/solsebo/users/create
 Content-Type: application/json
 
 {
@@ -12,4 +12,4 @@ Content-Type: application/json
 
 ###
 # Listar usuários
-GET http://localhost:8000/api/v1/users/list
+GET http://localhost:8000/solsebo/users/list

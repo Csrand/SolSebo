@@ -17,13 +17,13 @@ export class UserServiceCreate {
 
     const hasUser = await this.disciplineRepository.findOne({
       where: {
-        idUser: user.idUser,
+        id: user.id,
       },
     });
 
     if (hasUser) {
       throw new HttpException(
-        'Usuario com o email informado já está cadastrada',
+        'Usuario com o id informado já está cadastrada',
         HttpStatus.BAD_REQUEST,
       );
     }
