@@ -6,15 +6,15 @@ import {
 
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn('increment', {
-    name: 'ID_USUARIO',
+    name: 'id',
     type: 'int',
   })
   id: number;
 
-  @CreateDateColumn({ name: 'CREATED_AT' })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ name: 'UPDATED_AT' })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt!: Date;
 
   constructor(data: Partial<BaseEntity> = {}) {
