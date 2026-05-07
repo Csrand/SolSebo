@@ -18,16 +18,8 @@ export class Clube extends BaseEntity {
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean = true;
 
-  members: number[] = [];
-
   constructor(data: Partial<Clube> = {}) {
     super();
     Object.assign(this, data);
-  }
-
-  addMember(userId: number): void {
-    if (!this.members.includes(userId)) {
-      this.members.push(userId);
-    }
   }
 }

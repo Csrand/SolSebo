@@ -5,6 +5,10 @@ import * as Joi from 'joi';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MailModule } from './modules/mail/mail.module';
+import { BooksModule } from './modules/books/books.module';
+import { LibraryModule } from './modules/library/library.module';
+import { SessionsModule } from './modules/sessions/sessions.module';
+import { ClubsModule } from './modules/clubs/clubs.module';
 
 @Module({
   imports: [
@@ -44,6 +48,10 @@ import { MailModule } from './modules/mail/mail.module';
     UsersModule,
     AuthModule,
     MailModule,
+    BooksModule,
+    LibraryModule,
+    SessionsModule,
+    ClubsModule,
   ],
 })
 export class AppModule {}

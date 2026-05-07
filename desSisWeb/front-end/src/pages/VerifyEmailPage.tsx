@@ -24,7 +24,7 @@ function VerifyEmailPage() {
         setStatus('error');
         setMessage(err?.message || 'Erro ao verificar email.');
       });
-  }, [searchParams]);
+  }, [searchParams.get('token')]);
 
   return (
     <div className="auth-page">

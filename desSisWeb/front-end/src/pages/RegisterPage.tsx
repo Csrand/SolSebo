@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
@@ -13,6 +13,7 @@ interface FormErrors {
 
 function RegisterPage() {
   const { register } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -21,7 +22,6 @@ function RegisterPage() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [serverError, setServerError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   function handleChange(field: string, value: string) {
@@ -58,7 +58,6 @@ function RegisterPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setServerError('');
-    setSuccessMessage('');
 
     if (!validate()) return;
 
@@ -71,7 +70,7 @@ function RegisterPage() {
         password: formData.password,
         confirmPassword: formData.confirmPassword,
       });
-      setSuccessMessage('Cadastro realizado! Verifique seu email para ativar sua conta.');
+      navigate('/verify-notice', { state: { email: formData.email } });
     } catch (err: unknown) {
       const error = err as { message?: string };
       setServerError(error.message || 'Erro ao cadastrar');
@@ -86,7 +85,6 @@ function RegisterPage() {
         <h1>Cadastro</h1>
         <form onSubmit={handleSubmit} className="auth-form">
           {serverError && <div className="alert alert--error">{serverError}</div>}
-          {successMessage && <div className="alert alert--success">{successMessage}</div>}
 
           <Input
             label="Username"
@@ -132,16 +130,9 @@ function RegisterPage() {
           </Button>
         </form>
 
-        {successMessage && (
-          <p className="auth-footer">
-            <Link to="/login">Ir para o login</Link>
-          </p>
-        )}
-        {!successMessage && (
-          <p className="auth-footer">
-            Já tem conta? <Link to="/login">Faça login</Link>
-          </p>
-        )}
+        <p className="auth-footer">
+          Já tem conta? <Link to="/login">Faça login</Link>
+        </p>
       </div>
     </div>
   );

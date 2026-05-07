@@ -6,10 +6,12 @@
     "outDir": "build",
     "rootDir": ".",
     "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node"
   },
-  "include": ["steps/**/*.ts", "tests/**/*.ts"],
+  "include": ["tests/**/*.ts"],
   "exclude": ["node_modules", "build"]
 }

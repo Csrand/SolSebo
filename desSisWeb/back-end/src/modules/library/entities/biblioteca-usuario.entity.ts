@@ -16,7 +16,7 @@ export class BibliotecaUsuario extends BaseEntity {
   @Column({ name: 'book_id', type: 'int' })
   bookId: number = 0;
 
-  @Column({ type: 'enum' })
+  @Column({ type: 'enum', enum: StatusLeitura })
   status: StatusLeitura = StatusLeitura.WANT_TO_READ;
 
   @Column({ name: 'current_page', type: 'int', default: 0 })

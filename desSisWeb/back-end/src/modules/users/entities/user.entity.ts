@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { BaseEntity } from 'src/commons/entity/base-entity';
+import { BaseEntity } from '../../../commons/entity/base-entity';
 
 @Entity({ name: 'usuarios' })
 export class User extends BaseEntity {
@@ -33,10 +33,19 @@ export class User extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   descricao?: string;
 
-  @Column({ name: 'verification_token', type: 'char', length: 60, nullable: true })
+  @Column({
+    name: 'verification_token',
+    type: 'char',
+    length: 60,
+    nullable: true,
+  })
   verification_token: string | null = null;
 
-  @Column({ name: 'verification_token_expires', type: 'datetime', nullable: true })
+  @Column({
+    name: 'verification_token_expires',
+    type: 'datetime',
+    nullable: true,
+  })
   verification_token_expires: Date | null = null;
 
   @Column({ name: 'recovery_token', type: 'char', length: 60, nullable: true })
