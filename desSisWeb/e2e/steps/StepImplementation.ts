@@ -2,7 +2,7 @@ import { Step, BeforeSuite, AfterSuite, AfterScenario } from "gauge-ts";
 import { 
   click, closeBrowser, evaluate, goto, openBrowser, 
   press, text, textBox, write, toLeftOf, link,
-  screenshot, waitForNavigation, $ 
+  screenshot, $
 } from 'taiko';
 import assert = require("assert");
 

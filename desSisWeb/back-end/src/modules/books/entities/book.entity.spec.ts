@@ -16,7 +16,7 @@ describe('Books Entity', () => {
   it('should have optional fields', () => {
     const book = new Books();
     expect(book.publisher).toBeUndefined();
-    expect(book.cover_url).toBeUndefined();
+    expect(book.coverUrl).toBeUndefined();
     expect(book.description).toBeUndefined();
   });
 
