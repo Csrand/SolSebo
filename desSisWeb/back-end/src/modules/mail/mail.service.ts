@@ -1,17 +1,28 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  constructor(private readonly configService: ConfigService) {}
+  private transport: nodemailer.Transporter;
+
+  constructor(private readonly configService: ConfigService) {
+    this.transport = nodemailer.createTransport({
+      host: this.configService.get<string>('SMTP_HOST'),
+      port: this.configService.get<number>('SMTP_PORT'),
+      secure: false,
+      auth: {
+        user: this.configService.get<string>('SMTP_USER'),
+        pass: this.configService.get<string>('SMTP_PASS'),
+      },
+    });
+  }
 
   async sendVerificationEmail(email: string, token: string): Promise<void> {
-    const transport = this.createTransport();
     const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
     const verificationLink = `${frontendUrl}/verify-email/${token}`;
 
-    await transport.sendMail({
+    await this.transport.sendMail({
       from: this.configService.get<string>('SMTP_FROM'),
       to: email,
       subject: 'Verificação de E-mail - SolSebo',
@@ -26,11 +37,10 @@ export class MailService {
   }
 
   async sendRecoveryEmail(email: string, token: string): Promise<void> {
-    const transport = this.createTransport();
     const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
     const recoveryLink = `${frontendUrl}/reset-password/${token}`;
 
-    await transport.sendMail({
+    await this.transport.sendMail({
       from: this.configService.get<string>('SMTP_FROM'),
       to: email,
       subject: 'Recuperação de Senha - SolSebo',
@@ -42,18 +52,6 @@ export class MailService {
         <p>Este link expira em 1 hora.</p>
         <p>Se você não solicitou esta recuperação, ignore este e-mail.</p>
       `,
-    });
-  }
-
-  private createTransport() {
-    return nodemailer.createTransport({
-      host: this.configService.get<string>('SMTP_HOST'),
-      port: this.configService.get<number>('SMTP_PORT'),
-      secure: false,
-      auth: {
-        user: this.configService.get<string>('SMTP_USER'),
-        pass: this.configService.get<string>('SMTP_PASS'),
-      },
     });
   }
 }

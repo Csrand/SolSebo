@@ -1,13 +1,11 @@
 import { useState, type FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 
 interface FormErrors {
   username?: string;
-  firstName?: string;
-  lastName?: string;
   email?: string;
   password?: string;
   confirmPassword?: string;
@@ -15,17 +13,15 @@ interface FormErrors {
 
 function RegisterPage() {
   const { register } = useAuth();
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [serverError, setServerError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   function handleChange(field: string, value: string) {
@@ -62,6 +58,7 @@ function RegisterPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setServerError('');
+    setSuccessMessage('');
 
     if (!validate()) return;
 
@@ -70,12 +67,11 @@ function RegisterPage() {
     try {
       await register({
         username: formData.username,
-        firstName: formData.firstName || undefined,
-        lastName: formData.lastName || undefined,
         email: formData.email,
         password: formData.password,
+        confirmPassword: formData.confirmPassword,
       });
-      navigate('/users');
+      setSuccessMessage('Cadastro realizado! Verifique seu email para ativar sua conta.');
     } catch (err: unknown) {
       const error = err as { message?: string };
       setServerError(error.message || 'Erro ao cadastrar');
@@ -90,6 +86,7 @@ function RegisterPage() {
         <h1>Cadastro</h1>
         <form onSubmit={handleSubmit} className="auth-form">
           {serverError && <div className="alert alert--error">{serverError}</div>}
+          {successMessage && <div className="alert alert--success">{successMessage}</div>}
 
           <Input
             label="Username"
@@ -98,22 +95,6 @@ function RegisterPage() {
             onChange={(e) => handleChange('username', e.target.value)}
             error={errors.username}
             required
-          />
-
-          <Input
-            label="Nome"
-            type="text"
-            value={formData.firstName}
-            onChange={(e) => handleChange('firstName', e.target.value)}
-            error={errors.firstName}
-          />
-
-          <Input
-            label="Sobrenome"
-            type="text"
-            value={formData.lastName}
-            onChange={(e) => handleChange('lastName', e.target.value)}
-            error={errors.lastName}
           />
 
           <Input
@@ -151,9 +132,16 @@ function RegisterPage() {
           </Button>
         </form>
 
-        <p className="auth-footer">
-          Já tem conta? <Link to="/login">Faça login</Link>
-        </p>
+        {successMessage && (
+          <p className="auth-footer">
+            <Link to="/login">Ir para o login</Link>
+          </p>
+        )}
+        {!successMessage && (
+          <p className="auth-footer">
+            Já tem conta? <Link to="/login">Faça login</Link>
+          </p>
+        )}
       </div>
     </div>
   );

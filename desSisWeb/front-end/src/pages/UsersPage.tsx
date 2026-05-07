@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Pagination, UsersList, fetchUsers } from '../components/Pagination';
-import type { PaginatedResponse, User } from '../api/auth';
+import type { PaginatedResponse, User } from '../api/users';
 import { Button } from '../components/Button';
 
 const USERS_API_URL = '/users?limit=10&offset=0';

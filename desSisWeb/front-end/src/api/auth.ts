@@ -1,50 +1,41 @@
 import apiClient from './client';
 
 export interface LoginPayload {
-  identifier: string;
+  email: string;
   password: string;
 }
 
 export interface RegisterPayload {
   username: string;
-  firstName?: string;
-  lastName?: string;
   email: string;
   password: string;
+  confirmPassword: string;
+}
+
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface ResetPasswordPayload {
+  token: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+export interface VerifyEmailPayload {
+  token: string;
 }
 
 export interface AuthResponse {
   accessToken: string;
-  refreshToken: string;
   expiresIn: number;
 }
 
-export interface User {
+export interface AuthUser {
   id: number;
   username: string;
-  firstName?: string;
-  lastName?: string;
   email: string;
-  status_validacao: boolean;
-  is_active: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  links: {
-    self: string;
-    first: string;
-    next: string | null;
-    prev: string | null;
-    last: string | null;
-  };
-  meta: {
-    total: number;
-    limit: number;
-    offset: number;
-  };
+  is_admin: boolean;
 }
 
 async function login(payload: LoginPayload): Promise<AuthResponse> {
@@ -54,28 +45,36 @@ async function login(payload: LoginPayload): Promise<AuthResponse> {
   });
 }
 
-async function register(payload: RegisterPayload): Promise<AuthResponse> {
-  return apiClient<AuthResponse>('/auth/register', {
+async function register(payload: RegisterPayload): Promise<{ message: string }> {
+  return apiClient<{ message: string }>('/auth/register', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 }
 
-async function getProfile(): Promise<User> {
-  return apiClient<User>('/auth/me', { requiresAuth: true });
-}
-
-async function logout(): Promise<void> {
-  return apiClient<void>('/auth/logout', {
+async function verifyEmail(payload: VerifyEmailPayload): Promise<{ message: string }> {
+  return apiClient<{ message: string }>('/auth/verify-email', {
     method: 'POST',
-    requiresAuth: true,
+    body: JSON.stringify(payload),
   });
 }
 
-async function getUsers(limit = 10, offset = 0): Promise<PaginatedResponse<User>> {
-  return apiClient<PaginatedResponse<User>>(
-    `/users?limit=${limit}&offset=${offset}`,
-  );
+async function forgotPassword(payload: ForgotPasswordPayload): Promise<{ message: string }> {
+  return apiClient<{ message: string }>('/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
 }
 
-export { login, register, getProfile, logout, getUsers };
+async function resetPassword(payload: ResetPasswordPayload): Promise<{ message: string }> {
+  return apiClient<{ message: string }>('/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+async function getProfile(): Promise<AuthUser> {
+  return apiClient<AuthUser>('/auth/me', { requiresAuth: true });
+}
+
+export { login, register, verifyEmail, forgotPassword, resetPassword, getProfile };

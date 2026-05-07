@@ -1,36 +1,28 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   MinLength,
 } from 'class-validator';
+import { Match } from 'src/commons/decorators/match.decorator';
 
 export class RegisterDto {
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   @MinLength(3)
   username: string;
-
-  @IsOptional()
-  @IsString()
-  firstName?: string;
-
-  @IsOptional()
-  @IsString()
-  lastName?: string;
 
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   @MinLength(6)
   password: string;
 
-  @IsNotEmpty()
   @IsString()
-  @MinLength(6)
+  @IsNotEmpty()
+  @Match('password')
   confirmPassword: string;
 }

@@ -24,20 +24,26 @@ export class User extends BaseEntity {
   @Column({ name: 'is_active', type: 'boolean', default: true })
   is_active: boolean;
 
+  @Column({ name: 'is_admin', type: 'boolean', default: false })
+  is_admin: boolean;
+
+  @Column({ name: 'avatar_url', type: 'varchar', length: 500, nullable: true })
+  avatarUrl?: string;
+
+  @Column({ type: 'text', nullable: true })
+  descricao?: string;
+
   @Column({ name: 'verification_token', type: 'char', length: 60, nullable: true })
-  verification_token?: string;
+  verification_token: string | null = null;
 
   @Column({ name: 'verification_token_expires', type: 'datetime', nullable: true })
-  verification_token_expires?: Date;
+  verification_token_expires: Date | null = null;
 
   @Column({ name: 'recovery_token', type: 'char', length: 60, nullable: true })
-  recovery_token?: string;
+  recovery_token: string | null = null;
 
   @Column({ name: 'token_expires', type: 'datetime', nullable: true })
-  token_expires?: Date;
-
-  @Column({ name: 'refresh_token', type: 'char', length: 60, nullable: true })
-  refresh_token?: string;
+  token_expires: Date | null = null;
 
   verifyEmail(): void {
     this.status_validacao = true;

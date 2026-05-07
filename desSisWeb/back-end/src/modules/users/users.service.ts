@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto, createPaginatedResponse, PaginatedResponse } from '../../commons';
 
 @Injectable()
@@ -12,8 +11,8 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.userRepository.create(createUserDto);
+  async create(data: Partial<User>): Promise<User> {
+    const user = this.userRepository.create(data);
     return this.userRepository.save(user);
   }
 
@@ -26,20 +25,10 @@ export class UsersService {
       take: limit,
     });
 
-    return createPaginatedResponse(
-      data,
-      total,
-      limit,
-      offset,
-      '/users',
-    );
+    return createPaginatedResponse(data, total, limit, offset, '/users');
   }
 
-  async count(): Promise<number> {
-    return this.userRepository.count();
-  }
-
-  async findOne(id: number): Promise<User | null> {
+  async findById(id: number): Promise<User | null> {
     return this.userRepository.findOne({ where: { id } });
   }
 
@@ -57,18 +46,17 @@ export class UsersService {
     });
   }
 
-  async update(id: number, updateUserDto: Partial<User>): Promise<User | null> {
-    await this.userRepository.update(id, updateUserDto);
-    return this.findOne(id);
+  async findByVerificationToken(token: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { verification_token: token } });
   }
 
-  async updateRefreshToken(
-    userId: number,
-    refreshToken: string | null,
-  ): Promise<void> {
-    await this.userRepository.update(userId, {
-      refresh_token: refreshToken ?? undefined,
-    });
+  async findByRecoveryToken(token: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { recovery_token: token } });
+  }
+
+  async update(id: number, data: Partial<User>): Promise<User | null> {
+    await this.userRepository.update(id, data);
+    return this.findById(id);
   }
 
   async remove(id: number): Promise<void> {

@@ -1,5 +1,5 @@
 import apiClient from '../api/client';
-import type { PaginatedResponse, User } from '../api/auth';
+import type { PaginatedResponse, User } from '../api/users';
 import { Button } from '../components/Button';
 
 interface PaginationProps {

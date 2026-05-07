@@ -1,20 +1,20 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import type { User } from '../api/auth';
-import { login as apiLogin, register as apiRegister, logout as apiLogout, getProfile } from '../api/auth';
+import type { AuthUser } from '../api/auth';
+import { login as apiLogin, register as apiRegister, getProfile } from '../api/auth';
 
 interface AuthContextData {
-  user: User | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (identifier: string, password: string) => Promise<void>;
-  register: (data: { username: string; firstName?: string; lastName?: string; email: string; password: string }) => Promise<void>;
-  logout: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (data: { username: string; email: string; password: string; confirmPassword: string }) => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
 function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -32,29 +32,20 @@ function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  async function login(identifier: string, password: string) {
-    const response = await apiLogin({ identifier, password });
+  async function login(email: string, password: string) {
+    const response = await apiLogin({ email, password });
     sessionStorage.setItem('accessToken', response.accessToken);
     const profile = await getProfile();
     setUser(profile);
   }
 
-  async function register(data: { username: string; firstName?: string; lastName?: string; email: string; password: string }) {
-    const response = await apiRegister(data);
-    sessionStorage.setItem('accessToken', response.accessToken);
-    const profile = await getProfile();
-    setUser(profile);
+  async function register(data: { username: string; email: string; password: string; confirmPassword: string }) {
+    await apiRegister(data);
   }
 
-  async function logout() {
-    try {
-      await apiLogout();
-    } catch {
-      // ignore errors on logout
-    } finally {
-      sessionStorage.removeItem('accessToken');
-      setUser(null);
-    }
+  function logout() {
+    sessionStorage.removeItem('accessToken');
+    setUser(null);
   }
 
   return (

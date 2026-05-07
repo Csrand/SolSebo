@@ -1,6 +1,11 @@
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from 'src/commons/entity/base-entity';
-import { StatusLeitura } from '../enums/status-leitura.enum';
+
+export enum StatusLeitura {
+  WANT_TO_READ = 'want_to_read',
+  READING = 'reading',
+  READ = 'read',
+}
 
 @Entity({ name: 'biblioteca_usuario' })
 @Index(['userId', 'bookId'], { unique: true })
