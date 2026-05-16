@@ -1,0 +1,74 @@
+CREATE TABLE IF NOT EXISTS livros (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    isbn VARCHAR(20) UNIQUE,
+    publisher VARCHAR(255),
+    published_year INT,
+    cover_url VARCHAR(500),
+    description TEXT,
+    page_count INT,
+    google_books_id VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS clubes (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    current_book_id INT UNSIGNED,
+    creator_id INT UNSIGNED NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (current_book_id) REFERENCES livros(id) ON DELETE SET NULL,
+    FOREIGN KEY (creator_id) REFERENCES usuarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS clube_membros (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    clube_id INT UNSIGNED NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
+    cargo VARCHAR(20) DEFAULT 'member',
+    joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY (clube_id, user_id),
+    FOREIGN KEY (clube_id) REFERENCES clubes(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS biblioteca_usuario (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    book_id INT UNSIGNED NOT NULL,
+    status ENUM('want_to_read','reading','read') DEFAULT 'want_to_read',
+    current_page INT DEFAULT 0,
+    rating INT,
+    notes TEXT,
+    added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY (user_id, book_id),
+    FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES livros(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS sessoes_leitura (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    book_id INT UNSIGNED NOT NULL,
+    session_type VARCHAR(20) NOT NULL,
+    started_at DATETIME NOT NULL,
+    ended_at DATETIME,
+    planned_duration INT,
+    actual_duration INT,
+    reflection_text TEXT,
+    reflection_timer_duration INT,
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES livros(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
