@@ -14,21 +14,26 @@ import { LibraryService } from './library.service';
 import { CreateLibraryDto } from './dto/create-library.dto';
 import { UpdateLibraryDto } from './dto/update-library.dto';
 import { PaginationDto } from '../../commons';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { AdminGuard } from '../../guards/admin.guard';
+import { LocalAuthGuard } from '../auth/guards/local.auth.guard';
 
 @Controller('library')
-@UseGuards(JwtAuthGuard)
+@UseGuards(LocalAuthGuard)
 export class LibraryController {
   constructor(private readonly libraryService: LibraryService) {}
 
   @Post()
-  create(@Request() req: { user: { id: number } }, @Body() dto: CreateLibraryDto) {
+  create(
+    @Request() req: { user: { id: number } },
+    @Body() dto: CreateLibraryDto,
+  ) {
     return this.libraryService.create(req.user.id, dto);
   }
 
   @Get()
-  findAll(@Request() req: { user: { id: number } }, @Query() pagination?: PaginationDto) {
+  findAll(
+    @Request() req: { user: { id: number } },
+    @Query() pagination?: PaginationDto,
+  ) {
     return this.libraryService.findAllByUser(req.user.id, pagination);
   }
 
@@ -42,7 +47,7 @@ export class LibraryController {
     return this.libraryService.update(+id, dto);
   }
 
-  @UseGuards(AdminGuard)
+  @UseGuards(LocalAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.libraryService.remove(+id);

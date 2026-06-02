@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { PaginationDto, createPaginatedResponse, PaginatedResponse } from '../../commons';
+import {
+  PaginationDto,
+  createPaginatedResponse,
+  PaginatedResponse,
+} from '../../commons';
+import { LoginDto } from '../auth/dto/login.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -47,7 +53,9 @@ export class UsersService {
   }
 
   async findByVerificationToken(token: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { verification_token: token } });
+    return this.userRepository.findOne({
+      where: { verification_token: token },
+    });
   }
 
   async findByRecoveryToken(token: string): Promise<User | null> {
@@ -61,5 +69,12 @@ export class UsersService {
 
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);
+  }
+
+  async validateCredentials(loginDto: LoginDto) {
+    const user = await this.findByEmail(loginDto.email);
+    if (!user) return null;
+    const ok = bcrypt.compareSync(loginDto.email, loginDto.password);
+    return ok ? user : null;
   }
 }

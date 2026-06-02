@@ -12,23 +12,16 @@ import {
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { PaginationDto } from '../../commons';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { AdminGuard } from '../../guards/admin.guard';
+import { LocalAuthGuard } from '../auth/guards/local.auth.guard';
 
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post()
   create(@Body() dto: CreateBookDto) {
     return this.booksService.create(dto);
-  }
-
-  @Get()
-  findAll(@Query() pagination?: PaginationDto) {
-    return this.booksService.findAll(pagination);
   }
 
   @Get(':id')
@@ -36,13 +29,13 @@ export class BooksController {
     return this.booksService.findById(+id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateBookDto) {
     return this.booksService.update(+id, dto);
   }
 
-  @UseGuards(AdminGuard)
+  @UseGuards(LocalAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.booksService.remove(+id);
