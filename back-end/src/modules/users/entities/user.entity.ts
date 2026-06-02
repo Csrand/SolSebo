@@ -16,7 +16,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Column({ name: 'senha_hash', type: 'char', length: 60 })
-  senha_hash: string;
+  password: string;
 
   @Column({ name: 'status_validacao', type: 'boolean', default: false })
   status_validacao: boolean;
@@ -66,7 +66,7 @@ export class User extends BaseEntity {
   }
 
   resetPassword(newPasswordHash: string): void {
-    this.senha_hash = newPasswordHash;
+    this.password = newPasswordHash;
     this.recovery_token = null;
     this.token_expires = null;
   }

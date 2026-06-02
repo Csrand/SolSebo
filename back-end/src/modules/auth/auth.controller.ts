@@ -15,7 +15,7 @@ import { VerifyEmailDto } from './dto/verify-email.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { TokenResponseDto } from './dto/token-response.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LocalAuthGuard } from './guards/local.auth.guard';
 
 interface AuthRequest {
   user: {
@@ -42,26 +42,8 @@ export class AuthController {
     return this.authService.verifyEmail(dto);
   }
 
-  @Post('login')
-  @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginDto): Promise<TokenResponseDto> {
-    return this.authService.login(dto);
-  }
-
-  @Post('forgot-password')
-  @HttpCode(HttpStatus.OK)
-  async forgotPassword(@Body() dto: ForgotPasswordDto): Promise<{ message: string }> {
-    return this.authService.forgotPassword(dto);
-  }
-
-  @Post('reset-password')
-  @HttpCode(HttpStatus.OK)
-  async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ message: string }> {
-    return this.authService.resetPassword(dto);
-  }
-
   @Get('me')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   getProfile(@Request() req: AuthRequest) {
     return req.user;

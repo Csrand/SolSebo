@@ -14,14 +14,13 @@ import { ClubsService } from './clubs.service';
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
 import { PaginationDto } from '../../commons';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { AdminGuard } from '../../guards/admin.guard';
+import { LocalAuthGuard } from '../auth/guards/local.auth.guard';
 
 @Controller('clubs')
 export class ClubsController {
   constructor(private readonly clubsService: ClubsService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post()
   create(@Request() req: { user: { id: number } }, @Body() dto: CreateClubDto) {
     return this.clubsService.create(req.user.id, dto);
@@ -37,25 +36,25 @@ export class ClubsController {
     return this.clubsService.findById(+id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Get(':id/membros')
   getMembros(@Param('id') id: string) {
     return this.clubsService.getMembros(+id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post(':id/membros')
   addMembro(@Param('id') id: string, @Request() req: { user: { id: number } }) {
     return this.clubsService.addMembro(+id, req.user.id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateClubDto) {
     return this.clubsService.update(+id, dto);
   }
 
-  @UseGuards(AdminGuard)
+  @UseGuards(LocalAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.clubsService.remove(+id);
